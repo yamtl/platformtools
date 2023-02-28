@@ -1,9 +1,13 @@
 package com.mdenetnetwork.ep.toolfunctions.eclipseocl;
 
-import java.io.ByteArrayOutputStream;
+
+
+import java.io.ByteArrayInputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
@@ -19,27 +23,37 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.Diagnostician;
 import org.eclipse.emf.ecore.util.EObjectValidator;
 import org.eclipse.emf.ecore.xmi.XMIResource;
+import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.edit.ui.EMFEditUIPlugin;
+import org.eclipse.emf.emfatic.core.EmfaticResource;
 import org.eclipse.emf.emfatic.core.EmfaticResourceFactory;
-
 import org.eclipse.ocl.pivot.internal.labels.LabelSubstitutionLabelProvider;
 import org.eclipse.ocl.pivot.utilities.OCL;
 import org.eclipse.ocl.pivot.utilities.PivotUtil;
 import org.eclipse.ocl.pivot.validation.ComposedEValidator;
+import org.eclipse.ocl.xtext.basecs.PackageCS;
 import org.eclipse.ocl.xtext.completeocl.CompleteOCLStandaloneSetup;
+import org.eclipse.ocl.xtext.completeocl.utilities.CompleteOCLCSResource;
 import org.eclipse.ocl.xtext.completeocl.validation.CompleteOCLEObjectValidator;
 import org.eclipse.ocl.xtext.oclinecore.OCLinEcoreStandaloneSetup;
+import org.eclipse.ocl.xtext.oclinecore.utilities.OCLinEcoreCSResource;
 import org.eclipse.ocl.xtext.oclinecore.validation.OCLinEcoreEObjectValidator;
+import org.eclipse.ocl.xtext.oclinecorecs.TopLevelCS;
 import org.eclipse.ocl.xtext.oclstdlib.OCLstdlibStandaloneSetup;
 
-
+import com.google.cloud.functions.HttpFunction;
+import com.google.cloud.functions.HttpRequest;
+import com.google.cloud.functions.HttpResponse;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+//import com.mdenetnetwork.ep.toolfunctions.eclipseocl.RunEclipseOclFunction.MyDiagnostician;
 
-public class RunEclipseOclFunction extends  MdeNetToolFunction{
+public class EclipseOclTool  { 
+	
 	private OCL ocl = null;
 	
 	
-	public RunEclipseOclFunction () {
+	public EclipseOclTool () {
 		ocl = OCL.newInstance(OCL.CLASS_PATH);
 		
 		CompleteOCLStandaloneSetup.doSetup(); 
@@ -51,20 +65,8 @@ public class RunEclipseOclFunction extends  MdeNetToolFunction{
 		
 	}
 	
-	
-	@Override
-	public void serviceImpl(JsonObject request, JsonObject response) throws Exception {
-		
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		run(	request.get("emfatic").getAsString() ,
-				request.get("oclcomplete").getAsString(), 
-				request.get("xmi").getAsString(), 
-				bos, response);
-		response.addProperty("output", bos.toString());
-	}
-
 	public void run(String ecore, String oclcomplete, String xmi, OutputStream outputStream, JsonObject response) throws Exception {
-				
+		
 		//ResourceSet resourceSet = new XtextResourceSet();
 		ResourceSet resourceSet = ocl.getResourceSet();
 		
@@ -176,12 +178,160 @@ public class RunEclipseOclFunction extends  MdeNetToolFunction{
 //	}
 //	
 	
+	
+	
+	
+//	protected InMemoryEmfModel getInMemoryOclInEcore(String xmi, String oclinecore) throws Exception {
+//		ResourceSet resourceSet = new ResourceSetImpl();
+//		OCLinEcoreCSResource ePackage = getOclInEcoreResource(oclinecore);
+//		
+//		resourceSet.getPackageRegistry().put(ePackage.getNsURI(), ePackage);
+//		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("*", new XMIResourceFactoryImpl());
+//		Resource resource = resourceSet.createResource(URI.createURI("xmi.xmi"));
+//		resource.load(new ByteArrayInputStream(xmi.getBytes()), null);
+//
+//		InMemoryEmfModel model = new InMemoryEmfModel(resource);
+//		model.setName("M");
+//		return model;
+//	}
+	
+	//protected InMemoryEmfModel getBlankInMemoryModel(String emfatic) throws Exception {
+	
+	//protected InMemoryEmfModel getInMemoryEmfaticModel(String emfatic) throws Exception {
+	
+	protected PackageCS getOclInEcoreResource(ResourceSet rs, String oclinecore) throws Exception {
+	
+		if (oclinecore == null || oclinecore.trim().isEmpty()) { 
+			return null;
+		}
+		
+		
+		OCLinEcoreCSResource oclinecoreResource = (OCLinEcoreCSResource) rs.createResource(URI.createURI("oclinecore.oclinecore")); 
+
+		oclinecoreResource.load(new ByteArrayInputStream(oclinecore.getBytes()), null); 
+
+		TopLevelCS csimp = (TopLevelCS) oclinecoreResource.getContents().get(0);
+		PackageCS packcs = csimp.getOwnedPackages().get(0);
+	
+
+		if (oclinecoreResource.getParseResult().hasSyntaxErrors()) {
+			throw new RuntimeException(oclinecoreResource.getParseResult().getSyntaxErrors().toString());
+		}
+			
+		return packcs;
+	}
+
+	protected void getXmiResource(ResourceSet rs, String xmi) throws Exception {
+		
+		if (xmi == null || xmi.trim().isEmpty()) { 
+			return;
+		}
+			
+		XMIResource xmiResource = (XMIResource) rs.createResource(URI.createURI("xmi.xmi"));
+
+		xmiResource.load(new ByteArrayInputStream(xmi.getBytes()), null); 
+		
+		if (!xmiResource.getErrors().isEmpty()) {
+			throw new RuntimeException(xmiResource.getErrors().toString());
+		}
+		
+		return;
+	}
+	
+	protected void getOclCompleteResource(ResourceSet rs, String oclcomplete) throws Exception {
+		
+		if (oclcomplete == null || oclcomplete.trim().isEmpty()) { 
+			return;
+		}
+			
+		CompleteOCLCSResource oclcompleteResource = (CompleteOCLCSResource) rs.createResource(URI.createURI("ocl.ocl"));
+
+		oclcompleteResource.load(new ByteArrayInputStream(oclcomplete.getBytes()), null); 
+		
+		if (!oclcompleteResource.getErrors().isEmpty()) {
+			throw new RuntimeException(oclcompleteResource.getErrors().toString());
+		}
+		
+		return;
+	}
+	
+// TODO Move into wrapper function	
+//	
+//	protected void getFlexmiResource(ResourceSet rs, String flexmi) throws Exception  {
+//		if (flexmi == null || flexmi.trim().isEmpty()) { 
+//			return;
+//		}
+//			
+//		/FlexmiResource flexmiResource = (FlexmiResource) rs.createResource(URI.createURI("flexmi.flexmi"));
+//
+//		/** Exception on trying to parse, internal casting in flexmi to epackage.
+//		 *         org.eclipse.ocl.pivot.internal.resource.StandaloneProjectMap$EPackageDescriptor cannot be cast to class org.eclipse.emf.ecore.EPackage */ 
+//		flexmiResource.load(new ByteArrayInputStream(flexmi.getBytes()), null); 
+//		
+//		if (!flexmiResource.getErrors().isEmpty()) {
+//			throw new RuntimeException(flexmiResource.getErrors().toString());
+//		}
+//		
+//		return;
+//	}
+	
+	
+	
+	protected EPackage getEmfaticResource(ResourceSet rs, String emfatic) throws Exception {
+		
+		if (emfatic == null || emfatic.trim().isEmpty()) { 
+			return null;
+		}
+		
+		EmfaticResource emfaticResource = (EmfaticResource) rs.createResource(URI.createURI("emfatic.emf"));
+		
+		emfaticResource.load(new ByteArrayInputStream(emfatic.getBytes()), null); 
+		
+		if (emfaticResource.getParseContext().hasErrors()) {
+			throw new RuntimeException(emfaticResource.getParseContext().getMessages()[0].getMessage());
+		}
+		
+		EPackage epkg = (EPackage) emfaticResource.getContents().get(0);
+		return epkg;
+	}	
+	
+	
+	
+	protected EPackage getXmlResource(ResourceSet rs, String xml) throws Exception {
+		
+		if (xml == null || xml.trim().isEmpty()) { 
+			return null;
+		}
+		
+		
+		XMLResource xmlResource = (XMLResource) rs.createResource(URI.createURI("ecore.ecore"));
+
+		xmlResource.load(new ByteArrayInputStream(xml.getBytes()), null); 
+		
+		if (!xmlResource.getErrors().isEmpty()) {
+			throw new RuntimeException(xmlResource.getErrors().toString());
+		}
+		
+		EPackage epkg = (EPackage) xmlResource.getContents().get(0);
+		return epkg;
+	}	
+	
+	
+	protected JsonObject getJsonObject(HttpRequest request) throws Exception {
+		String json = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+		return getJsonObject(json);
+	}
+	
+	protected JsonObject getJsonObject(String json) {
+		return JsonParser.parseString(json).getAsJsonObject();
+	}
+	
 	public static void main(String[] args) throws Exception {
 		Logger.getRootLogger().addAppender(new ConsoleAppender(new SimpleLayout(), ConsoleAppender.SYSTEM_OUT));
 		
 		JsonObject response = new JsonObject();
 		
-		new RunEclipseOclFunction().run(
+		new EclipseOclTool().run(
 				emfatic_mm, 
 				oclfile,
 				xmi, 
@@ -197,7 +347,6 @@ public class RunEclipseOclFunction extends  MdeNetToolFunction{
 				"<?nsuri http://www.eclipse.org/emf/2002/Ecore?>\n<package/>", "package tree; class Tree{}",
 				System.out, new JsonObject());*/
 	}
-	
 	
 	private  static String ecore_mm =  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 			+ "<ecore:EPackage xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
@@ -431,4 +580,5 @@ public class RunEclipseOclFunction extends  MdeNetToolFunction{
 			+ " \n"
 			+ " endpackage \n"
 			+ "";
+	
 }

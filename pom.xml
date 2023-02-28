@@ -8,8 +8,22 @@
   
   
   <modules>
+        <module>com.mde-network.ep.toolfunctions.core</module>
         <module>com.mde-network.ep.toolfunctions.eclipseocl</module>
- </modules>
+        <module>com.mde-network.ep.toolfunctions.eclipseoclfunction</module>
+  </modules>
+  
+  	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.google.cloud</groupId>
+				<artifactId>libraries-bom</artifactId>
+				<version>15.0.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
   
   
 </project>

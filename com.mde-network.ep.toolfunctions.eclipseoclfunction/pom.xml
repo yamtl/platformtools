@@ -1,0 +1,60 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <groupId>com.mde-network.ep.toolfunctions</groupId>
+    <artifactId>toolfunctions-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  
+  
+  <artifactId>com.mde-network.ep.toolfunctions.eclipseoclfunction</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  
+  <packaging>jar</packaging>
+  
+ 	<repositories>	
+    </repositories>
+  
+  
+	<dependencies>
+		<dependency>
+			<groupId>com.mde-network.ep.toolfunctions</groupId>
+			<artifactId>com.mde-network.ep.toolfunctions.core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.mde-network.ep.toolfunctions</groupId>
+			<artifactId>com.mde-network.ep.toolfunctions.eclipseocl</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+    </dependencies>
+  
+  <build>
+ 
+    <plugins>
+     		
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <release>11</release>
+        </configuration>
+      </plugin>
+      
+      	<plugin>
+	        <groupId>com.google.cloud.functions</groupId>
+	        <artifactId>function-maven-plugin</artifactId>
+	        <version>0.9.5</version>
+	         <configuration>
+                        <!--functionTarget>com.mdenetnetwork.ep.eclipseocl.RunEclipseOclFunction</functionTarget-->
+	        </configuration>
+        </plugin>
+              
+    </plugins>
+    
+ 
+    
+  </build>
+  
+ </project>
