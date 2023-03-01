@@ -135,8 +135,8 @@ public class EclipseOclTool  {
 
 		
 		
-		PrintWriter pwriter = new PrintWriter(outputStream) ;
-		pwriter.print(formattedDiagnostics);
+		
+		outputStream.write(formattedDiagnostics.getBytes());
 		response.addProperty("validationResult", formattedDiagnostics);
 		
 	}
@@ -154,8 +154,9 @@ public class EclipseOclTool  {
 
 		public BasicDiagnostic createDefaultDiagnostic(Resource resource) {
 			return new BasicDiagnostic(EObjectValidator.DIAGNOSTIC_SOURCE, 0,
-				EMFEditUIPlugin.INSTANCE.getString(
-					"_UI_DiagnosisOfNObjects_message", new String[]{"1"}),
+				//EMFEditUIPlugin.INSTANCE.getString(
+				//	"_UI_DiagnosisOfNObjects_message", new String[]{"1"}) // TODO Add to plugin.properties to jar 
+					"Diagnosis of 1 objects.",
 				new Object[]{resource});
 		}
 

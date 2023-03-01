@@ -18,7 +18,6 @@ public class RunEclipseOclFunction extends MdeNetToolFunction {
 					request.get("oclcomplete").getAsString(), 
 					request.get("xmi").getAsString(), 
 					bos, response);
-			response.addProperty("output", bos.toString());
 			
 		response.addProperty("output", bos.toString());
 	}

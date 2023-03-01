@@ -106,8 +106,8 @@
 		        <goal>unpack-dependencies</goal>
 		      </goals>
 		      <configuration>
-		        <includes>**/*.class</includes>
-		        <excludes>**/*.properties</excludes>
+		        <includes>**/*</includes>
+		        <excludes>**/META-INF/*.SF,**/META-INF/*.DSA,**/META-INF/*.RSA</excludes>
 		        <outputDirectory>target/classes</outputDirectory>
 		        <overWriteReleases>false</overWriteReleases>
 		        <overWriteSnapshots>true</overWriteSnapshots>
