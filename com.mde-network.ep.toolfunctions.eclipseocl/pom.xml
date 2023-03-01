@@ -67,23 +67,23 @@
     
     
     <plugins>
-	       <plugin>
+	    <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-maven-plugin</artifactId>
         <version>${tycho-version}</version>
         <extensions>true</extensions>
-      </plugin>
+     </plugin>
       
       <plugin>
-	   <groupId>org.eclipse.tycho</groupId>
-	   <artifactId>target-platform-configuration</artifactId>
-	   <version>${tycho-version}</version>
-	   <configuration>
-	      <target>
-	       <file>mdenettool.target</file>
-	      </target>
-	   </configuration>
-		</plugin>
+		   <groupId>org.eclipse.tycho</groupId>
+		   <artifactId>target-platform-configuration</artifactId>
+		   <version>${tycho-version}</version>
+		   <configuration>
+		      <target>
+		       <file>mdenettool.target</file>
+		      </target>
+		   </configuration>
+	   </plugin>
         
 		
       <plugin>
@@ -94,14 +94,27 @@
         </configuration>
       </plugin>
       
-      	<plugin>
-				<groupId>com.google.cloud.functions</groupId>
-				<artifactId>function-maven-plugin</artifactId>
-				<version>0.9.5</version>
-				 <configuration>
-    			<functionTarget>com.mdenetnetwork.ep.eclipseocl.RunEclipseOclFunction</functionTarget>
-  				</configuration>
-			</plugin>
+		<plugin>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-dependency-plugin</artifactId>
+		  <version>3.5.0</version>
+		  <executions>
+		    <execution>
+		      <id>unpack-dependencies</id>
+		      <phase>prepare-package</phase>
+		      <goals>
+		        <goal>unpack-dependencies</goal>
+		      </goals>
+		      <configuration>
+		        <includes>**/*.class</includes>
+		        <excludes>**/*.properties</excludes>
+		        <outputDirectory>target/classes</outputDirectory>
+		        <overWriteReleases>false</overWriteReleases>
+		        <overWriteSnapshots>true</overWriteSnapshots>
+		      </configuration>
+		    </execution>
+		  </executions>
+		</plugin>
       
     </plugins>
     
