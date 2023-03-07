@@ -20,7 +20,7 @@ public class RunConversionEmfaticToEcore extends MdeNetToolFunction {
 				request.get("input").getAsString(), bos, response);
 		
 	}
-// mvn function:run -Drun.functionTarget=com.mdenetnetwork.ep.toolfunctions.emfunction.RunConversionEmfToDiagram -Drun.port=9090
+// mvn function:run -Drun.functionTarget=com.mdenetnetwork.ep.toolfunctions.emfaticunction.RunConversionEmfaticToEcore -Drun.port=9090
  
 }
 
