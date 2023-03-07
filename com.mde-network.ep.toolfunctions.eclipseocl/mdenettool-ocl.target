@@ -16,7 +16,7 @@
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="http://download.eclipse.org/emfatic/interim"/>
-			<unit id="org.eclipse.emf.emfatic.feature.group" version="1.1.0.202301241109"/>
+			<unit id="org.eclipse.emf.emfatic.feature.group" version="1.1.0.202303062128"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="http://download.eclipse.org/epsilon/updates/2.4/"/>

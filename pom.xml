@@ -11,6 +11,8 @@
         <module>com.mde-network.ep.toolfunctions.core</module>
         <module>com.mde-network.ep.toolfunctions.eclipseocl</module>
         <module>com.mde-network.ep.toolfunctions.eclipseoclfunction</module>
+        <module>com.mde-network.ep.toolfunctions.emf</module>
+        <module>com.mde-network.ep.toolfunctions.emffunction</module>
   </modules>
   
   	<dependencyManagement>
@@ -22,6 +24,13 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+		
+		<dependency>
+	        <groupId>org.junit.jupiter</groupId>
+	        <artifactId>junit-jupiter-engine</artifactId>
+	        <version>5.9.1</version>
+	        <scope>test</scope>
+	    </dependency>
 		</dependencies>
 	</dependencyManagement>
   
