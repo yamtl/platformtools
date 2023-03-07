@@ -1,14 +1,14 @@
-package com.mdenetnetwork.ep.toolfunctions.emffunction;
+package com.mdenetnetwork.ep.toolfunctions.emfaticfunction;
 
 import java.io.ByteArrayOutputStream;
 
 import com.google.gson.JsonObject;
 import com.mdenetnetwork.ep.toolfunctions.core.MdeNetToolFunction;
 
-import com.mdenetnetwork.ep.toolfunctions.emf.EmfTool;
+import com.mdenetnetwork.ep.toolfunctions.emfatic.EmfaticTool;
 
 
-public class RunConversionXmiToDiagram extends MdeNetToolFunction {
+public class RunConversionEmfaticToDiagram extends MdeNetToolFunction {
 
 	@Override
 	public void serviceImpl(JsonObject request, JsonObject response) throws Exception {
@@ -16,7 +16,7 @@ public class RunConversionXmiToDiagram extends MdeNetToolFunction {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		
 
-		new EmfTool().ConvertXmiToDiagram(
+		new EmfaticTool().convertEmfaticToEcore(
 				request.get("input").getAsString(), bos, response);
 		
 	}

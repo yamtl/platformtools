@@ -1,4 +1,4 @@
-package main.java.com.mdenetnetwork.ep.toolfunctions.emf;
+package com.mdenetnetwork.ep.toolfunctions.emf;
 
 import java.io.ByteArrayInputStream;
 

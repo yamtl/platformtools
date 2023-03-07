@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import com.google.gson.JsonObject;
 
-import main.java.com.mdenetnetwork.ep.toolfunctions.emf.EmfTool;
+import com.mdenetnetwork.ep.toolfunctions.emf.EmfTool;
 
 
 public class EmfToolTests {

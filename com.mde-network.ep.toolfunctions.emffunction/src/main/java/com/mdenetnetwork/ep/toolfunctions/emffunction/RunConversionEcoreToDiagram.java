@@ -5,7 +5,7 @@ import java.io.ByteArrayOutputStream;
 import com.google.gson.JsonObject;
 import com.mdenetnetwork.ep.toolfunctions.core.MdeNetToolFunction;
 
-import main.java.com.mdenetnetwork.ep.toolfunctions.emf.EmfTool;
+import com.mdenetnetwork.ep.toolfunctions.emf.EmfTool;
 
 
 public class RunConversionEcoreToDiagram extends MdeNetToolFunction {
