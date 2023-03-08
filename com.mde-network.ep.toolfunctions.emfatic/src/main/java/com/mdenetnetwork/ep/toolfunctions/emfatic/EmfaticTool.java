@@ -1,25 +1,28 @@
 package com.mdenetnetwork.ep.toolfunctions.emfatic;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
+import java.io.Reader;
+import java.io.StringReader;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMIResource;
-import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
-import org.eclipse.emf.emfatic.core.EmfaticResource;
 import org.eclipse.emf.emfatic.core.EmfaticResourceFactory;
 
 import com.mdenetnetwork.ep.toolfunctions.emf.EmfResourceLoader;
-import org.eclipse.emf.emfatic.core.generator.ecore.EcoreGenerator;
+
+import org.eclipse.emf.emfatic.core.generator.ecore.Builder;
+import org.eclipse.emf.emfatic.core.generator.ecore.Connector;
 
 import org.eclipse.emf.emfatic.core.generator.emfatic.Writer;
+import org.eclipse.emf.emfatic.core.lang.gen.parser.EmfaticParserDriver;
+import org.eclipse.gymnast.runtime.core.parser.ParseContext;
 
 import com.google.gson.JsonObject;
 
@@ -28,28 +31,64 @@ public class EmfaticTool  {
 	public EmfaticTool() {
 		
 		// Register emf resource factories
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", new EcoreResourceFactoryImpl());
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", new EcoreResourceFactoryImpl());
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("emfatic", new EmfaticResourceFactory());
 	}
 
 	
 	public void convertEmfaticToEcore(String emfatic,  OutputStream outputStream, JsonObject response) throws Exception {
 		
+		final String emfaticFilename = "emfatic.emfatic";
+		
 		/*-------------------------------------
 		 *  Load Emfatic 
 		 *-------------------------------------*/	
+		
+		/* Loaded as per the emfatic generator implementation rather than the mde emf loader
+		 * so that the ecore can be generated.
+		 * 
+		 * emfatic doesn't provide a generator that is not File based. 
+		 */
 		ResourceSet resourceSet = new ResourceSetImpl();
-			
-		EPackage epkg = EmfResourceLoader.loadMetamodel( resourceSet , emfatic, "emfatic.emfatic", EmfaticResource.class);
+
+		Reader emfaticInput = new StringReader(emfatic);
+		BufferedReader reader = new BufferedReader(emfaticInput);
+		EmfaticParserDriver parser = new EmfaticParserDriver(URI.createURI(emfaticFilename));
+		ParseContext parseContext = parser.parse(reader);
+		String filePath = emfaticFilename.replaceAll("\\.emfatic$", ".ecore");
 		
-		resourceSet.getPackageRegistry().put(epkg.getNsURI(), epkg ); // Register the metamodel uri
-	
+		//Resource resource = createResource(filePath, false);
+		Resource resource = resourceSet.createResource( URI.createURI(filePath)  );
+
 		
+		Builder builder = new Builder();
+		builder.build(parseContext, resource, null); // Monitor not actually used by called method
+
+
 		/*-------------------------------------
 		 *  Generate Ecore
-		 *-------------------------------------*/
-		//TODO
+		 *-------------------------------------*/		
+		if (!parseContext.hasErrors()) {
+			Connector connector = new Connector(builder);
+			connector.connect(parseContext, resource, null); // Monitor not actually used by called method
+			OutputStream ecoreStream = new ByteArrayOutputStream();
+			resource.save(ecoreStream, null);
+			
+			response.addProperty("output", ecoreStream.toString() );
+		}
+		else {
+			String message = parseContext.getMessages()[0].getMessage();
+			message = message.replaceAll("\\r|\\n", " ");
+			message = message.trim();
+			message = "Syntax error: " + message;
+			
+			outputStream.write(message.getBytes());
+			response.addProperty("output",  "" );
+		}		
+		
+		
 	}
+	
 	
 	public void convertEcoreToEmfatic(String emfatic,  OutputStream outputStream, JsonObject response) throws Exception {
 		

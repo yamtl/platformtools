@@ -16,7 +16,7 @@ public class RunConversionEmfaticToEcore extends MdeNetToolFunction {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		
 
-		new EmfaticTool().convertEmfaticToDiagram(
+		new EmfaticTool().convertEmfaticToEcore(
 				request.get("input").getAsString(), bos, response);
 		
 	}
