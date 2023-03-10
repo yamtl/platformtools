@@ -1,0 +1,57 @@
+<archetype-descriptor
+        xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.1.0 https://maven.apache.org/xsd/archetype-descriptor-1.1.0.xsd"
+        name="ep-toolfunction" partial="false">
+    
+    <requiredProperties>
+        <requiredProperty key="toolName" >
+        </requiredProperty>
+
+       <requiredProperty key="toolPackageName" >
+            <defaultValue>${toolName.toLowerCase()}</defaultValue>
+        </requiredProperty>
+
+       <requiredProperty key="toolFunctionName" >
+            <defaultValue>${toolName}Function</defaultValue>
+        </requiredProperty>
+
+      <requiredProperty key="toolFunctionPackageName" >
+            <defaultValue>${toolFunctionName.toLowerCase()}</defaultValue>
+        </requiredProperty>
+
+        <requiredProperty key="groupId" >
+            <defaultValue>com.mde-network.ep.toolfunctions</defaultValue>
+        </requiredProperty>
+
+        <requiredProperty key="artifactId" >
+            <defaultValue>${groupId}.${toolFunctionPackageName}</defaultValue>
+        </requiredProperty>
+
+    </requiredProperties>
+        
+    <fileSets>
+        <fileSet filtered="true" packaged="false">
+            <directory>src/main/java</directory>
+        </fileSet>
+
+        <fileSet filtered="true" packaged="false">
+            <directory>src/test/java</directory>
+        </fileSet>
+
+
+       <fileSet filtered="true" packaged="false">
+            <directory></directory>
+            <includes>
+                <include>*.project</include>
+            </includes>
+        </fileSet>
+
+        <fileSet filtered="false" packaged="false">
+            <directory></directory>
+            <includes>
+                <include>*.classpath</include>
+            </includes>
+        </fileSet>
+
+    </fileSets>
+</archetype-descriptor>

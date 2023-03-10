@@ -1,0 +1,57 @@
+<archetype-descriptor
+        xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.1.0 https://maven.apache.org/xsd/archetype-descriptor-1.1.0.xsd"
+        name="ep-tool" partial="false">
+    
+    <requiredProperties>
+        <requiredProperty key="toolName" >
+        </requiredProperty>
+
+        <requiredProperty key="toolPackageName" >
+            <defaultValue>${toolName.toLowerCase()}</defaultValue>
+        </requiredProperty>
+
+        <requiredProperty key="groupId" >
+            <defaultValue>com.mde-network.ep.toolfunctions</defaultValue>
+        </requiredProperty>
+
+        <requiredProperty key="artifactId" >
+            <defaultValue>${groupId}.${toolPackageName}</defaultValue>
+        </requiredProperty>
+
+    </requiredProperties>
+        
+    <fileSets>
+        <fileSet filtered="true" packaged="false">
+            <directory>src/main/java</directory>
+        </fileSet>
+
+
+ 
+
+        <fileSet filtered="true" packaged="false">
+            <directory>META-INF</directory>
+            <includes>
+                <include>*.MF</include>
+            </includes>
+        </fileSet>
+
+
+       <fileSet filtered="true" packaged="false">
+            <directory></directory>
+            <includes>
+                <include>*.project</include>
+                <include>*.target</include>
+            </includes>
+        </fileSet>
+
+        <fileSet filtered="false" packaged="false">
+            <directory></directory>
+            <includes>
+                <include>*.classpath</include>
+                <include>*.properties</include>
+            </includes>
+        </fileSet>
+
+    </fileSets>
+</archetype-descriptor>
