@@ -18,6 +18,8 @@
     <module>com.mde-network.ep.toolfunctions.emffunction</module>
     <module>com.mde-network.ep.toolfunctions.emfatic</module>
     <module>com.mde-network.ep.toolfunctions.emfaticfunction</module>
+    <module>com.mde-network.ep.toolfunctions.epsilon</module>
+    <module>com.mde-network.ep.toolfunctions.epsilonfunction</module>  
   </modules>
         
   <dependencyManagement>

@@ -14,9 +14,9 @@ public class RunEclipseOclFunction extends MdeNetToolFunction {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		
 		new EclipseOclTool().
-			run(	request.get("emfatic").getAsString() ,
-					request.get("oclcomplete").getAsString(), 
-					request.get("xmi").getAsString(), 
+			run(	request.get("metamodel").getAsString() ,  // emfatic
+					request.get("constraints").getAsString(), // oclcomplete
+					request.get("model").getAsString(),  // xmi
 					bos, response);
 			
 		response.addProperty("output", bos.toString());

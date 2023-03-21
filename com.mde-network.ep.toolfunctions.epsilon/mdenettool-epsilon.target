@@ -11,10 +11,6 @@
 			<unit id="org.eclipse.emf.feature.group" version="2.32.0.v20221121-1400"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="http://download.eclipse.org/epsilon/updates/2.4/"/>
-			
-		</location>
-		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="http://download.eclipse.org/emfatic/interim"/>
 			<unit id="org.eclipse.emf.emfatic.feature.group" version="1.1.0.202303062128"/>
 		</location>
@@ -52,7 +48,57 @@
 					<groupId>com.mde-network.ep.toolfunctions</groupId>
 					<artifactId>com.mde-network.ep.toolfunctions.emf</artifactId>
 					<version>0.0.1-SNAPSHOT</version>
-					<type>pom</type>
+					<type>jar</type>
+				</dependency>
+			</dependencies>
+		</location>
+		<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.epsilon</groupId>
+					<artifactId>org.eclipse.epsilon.flexmi</artifactId>
+					<version>2.4.0</version>
+					<type>jar</type>
+				</dependency>
+			</dependencies>
+		</location>
+		<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.epsilon</groupId>
+					<artifactId>org.eclipse.epsilon.emc.hutn</artifactId>
+					<version>2.4.0</version>
+					<type>jar</type>
+				</dependency>
+			</dependencies>
+		</location>
+		<location includeDependencyDepth="infinite" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.epsilon</groupId>
+					<artifactId>org.eclipse.epsilon.common</artifactId>
+					<version>2.4.0</version>
+					<type>jar</type>
+				</dependency>
+			</dependencies>
+		</location>
+		<location includeDependencyDepth="infinite" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
+			<dependencies>
+				<dependency>
+					<groupId>com.google.guava</groupId>
+					<artifactId>guava</artifactId>
+					<version>31.1-jre</version>
+					<type>jar</type>
+				</dependency>
+			</dependencies>
+		</location>
+		<location includeDependencyDepth="infinite" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.epsilon</groupId>
+					<artifactId>org.eclipse.epsilon.eol.engine</artifactId>
+					<version>2.4.0</version>
+					<type>jar</type>
 				</dependency>
 			</dependencies>
 		</location>

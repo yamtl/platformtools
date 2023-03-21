@@ -14,6 +14,10 @@
 			<repository location="http://download.eclipse.org/epsilon/updates/2.4/"/>
 			
 		</location>
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="http://download.eclipse.org/emfatic/interim"/>
+			<unit id="org.eclipse.emf.emfatic.feature.group" version="1.1.0.202303062128"/>
+		</location>
 		<location includeDependencyDepth="infinite" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
 
 			<feature id="maven.com.google.gson" label="Google gson library" version="1.0.0.qualifier">
@@ -51,10 +55,6 @@
 					<type>pom</type>
 				</dependency>
 			</dependencies>
-		</location>
-		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="http://download.eclipse.org/emfatic/interim"/>
-			<unit id="org.eclipse.emf.emfatic.feature.group" version="1.1.0.202303062128"/>
 		</location>
 	</locations>
 </target>
