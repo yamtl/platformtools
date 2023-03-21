@@ -10,7 +10,7 @@ mvn clean
 mvn install
 ```
 
-To Run the eclipse ocl tool function backend service locally, navigate to the `com.mde-network.ep.toolfunctions.eclipseoclfunction` subdirectory and run the follwoing command.
+To Run the eclipse ocl tool function backend service locally, navigate to the `com.mde-network.ep.toolfunctions.eclipseoclfunction` subdirectory and run the following command.
 
 ```
 mvn function:run -Drun.functionTarget=com.mdenetnetwork.ep.toolfunctions.eclipseoclfunction.RunEclipseOclFunction -Drun.port=9090
