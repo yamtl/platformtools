@@ -80,7 +80,7 @@
 		   <version>${tycho-version}</version>
 		   <configuration>
 		      <target>
-		       <file>mdenettool.target</file>
+		       <file>mdenettool-ocl.target</file>
 		      </target>
 		   </configuration>
 	   </plugin>
