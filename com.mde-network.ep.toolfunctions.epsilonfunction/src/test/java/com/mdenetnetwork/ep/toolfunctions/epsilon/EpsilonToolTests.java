@@ -5,6 +5,8 @@ package com.mdenetnetwork.ep.toolfunctions.epsilon;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayOutputStream;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.google.gson.JsonElement;
@@ -16,19 +18,35 @@ import com.mdenetwork.ep.toolfunctions.epsilon.EpsilonTool;
 public class EpsilonToolTests {
 	
 	@Test
-	void test() throws Exception{
+	void testFlexmiToXmi() throws Exception{
 		JsonObject response = new JsonObject();
 		ByteArrayOutputStream outstream = new ByteArrayOutputStream();
 
 		EpsilonTool et = new EpsilonTool(); 
 
-		et.convertFlexmiToXmi(flexmi_mm, emfatic_mm, outstream, response);
+		et.convertFlexmiToXmi(flexmi, ecore_mm, outstream, response);
 		
 		String generatedXmi = response.get("output").getAsString();
 		
 		assertEquals(expectedXmi , generatedXmi);
 		
 	}	
+
+	@Test
+	void testFlexmiToXmi_mmhasfilerefs() throws Exception{
+		// resolution of resource url when "ecore.ecore"
+		JsonObject response = new JsonObject();
+		ByteArrayOutputStream outstream = new ByteArrayOutputStream();
+
+		EpsilonTool et = new EpsilonTool(); 
+
+		et.convertFlexmiToXmi(flexmi, ecore_mm_filerefs, outstream, response);
+		
+		String generatedXmi = response.get("output").getAsString();
+		
+		assertEquals(expectedXmi , generatedXmi);
+		
+	}
 	
 	
 	private  static final String emfatic_mm = 
@@ -69,9 +87,56 @@ public class EpsilonToolTests {
 			+ "";
 	
 	
+	private  static final String ecore_mm = 
+			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+			+ "<ecore:EPackage xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+			+ "    xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" name=\"tutorial\" nsURI=\"http://www.eclipse.org/mdt/ocl/oclinecore/tutorial\"\n"
+			+ "    nsPrefix=\"tut\">\n"
+			+ "  <eAnnotations source=\"http://www.eclipse.org/OCL/Import\">\n"
+			+ "    <details key=\"ecore\" value=\"http://www.eclipse.org/emf/2002/Ecore\"/>\n"
+			+ "  </eAnnotations>\n"
+			+ "  <eClassifiers xsi:type=\"ecore:EClass\" name=\"Library\">\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"name\" lowerBound=\"1\" eType=\"ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString\"/>\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"books\" ordered=\"false\"\n"
+			+ "        upperBound=\"-1\" eType=\"#//Book\" containment=\"true\" eOpposite=\"#//Book/library\">\n"
+			+ "      <eAnnotations source=\"http://www.eclipse.org/OCL/Collection\">\n"
+			+ "        <details key=\"nullFree\" value=\"false\"/>\n"
+			+ "      </eAnnotations>\n"
+			+ "    </eStructuralFeatures>\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"loans\" ordered=\"false\"\n"
+			+ "        upperBound=\"-1\" eType=\"#//Loan\" containment=\"true\">\n"
+			+ "      <eAnnotations source=\"http://www.eclipse.org/OCL/Collection\">\n"
+			+ "        <details key=\"nullFree\" value=\"false\"/>\n"
+			+ "      </eAnnotations>\n"
+			+ "    </eStructuralFeatures>\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"members\" ordered=\"false\"\n"
+			+ "        upperBound=\"-1\" eType=\"#//Member\" containment=\"true\" eOpposite=\"#//Member/library\">\n"
+			+ "      <eAnnotations source=\"http://www.eclipse.org/OCL/Collection\">\n"
+			+ "        <details key=\"nullFree\" value=\"false\"/>\n"
+			+ "      </eAnnotations>\n"
+			+ "    </eStructuralFeatures>\n"
+			+ "  </eClassifiers>\n"
+			+ "  <eClassifiers xsi:type=\"ecore:EClass\" name=\"Book\">\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"name\" lowerBound=\"1\" eType=\"ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString\"/>\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"copies\" lowerBound=\"1\"\n"
+			+ "        eType=\"ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigInteger\"/>\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"library\" eType=\"#//Library\"\n"
+			+ "        eOpposite=\"#//Library/books\"/>\n"
+			+ "  </eClassifiers>\n"
+			+ "  <eClassifiers xsi:type=\"ecore:EClass\" name=\"Member\">\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"name\" lowerBound=\"1\" eType=\"ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString\"/>\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"library\" eType=\"#//Library\"\n"
+			+ "        eOpposite=\"#//Library/members\"/>\n"
+			+ "  </eClassifiers>\n"
+			+ "  <eClassifiers xsi:type=\"ecore:EClass\" name=\"Loan\">\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"book\" lowerBound=\"1\" eType=\"#//Book\"/>\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"member\" lowerBound=\"1\"\n"
+			+ "        eType=\"#//Member\"/>\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"date\" eType=\"ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate\"/>\n"
+			+ "  </eClassifiers>\n"
+			+ "</ecore:EPackage>"; 
 	
-	
-	private  static final String flexmi_mm = 
+	private  static final String flexmi = 
 			"<?nsuri http://www.eclipse.org/mdt/ocl/oclinecore/tutorial?>\n"
 			+ "\n"
 			+ "<library name=\"lib\">\n"
@@ -108,5 +173,54 @@ public class EpsilonToolTests {
 			+ "</tut:Library>\n"
 			+ "";
 	
-	
+	private  static final String ecore_mm_filerefs =
+			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+			+ "<ecore:EPackage xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+			+ "    xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" name=\"tutorial\" nsURI=\"http://www.eclipse.org/mdt/ocl/oclinecore/tutorial\"\n"
+			+ "    nsPrefix=\"tut\">\n"
+			+ "  <eAnnotations source=\"http://www.eclipse.org/OCL/Import\">\n"
+			+ "    <details key=\"ecore\" value=\"http://www.eclipse.org/emf/2002/Ecore\"/>\n"
+			+ "  </eAnnotations>\n"
+			+ "  <eClassifiers xsi:type=\"ecore:EClass\" name=\"Library\">\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"name\" lowerBound=\"1\" eType=\"ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString\"/>\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"books\" ordered=\"false\"\n"
+			+ "        upperBound=\"-1\" eType=\"ecore:EClass ecore.ecore#//Book\" containment=\"true\"\n"
+			+ "        eOpposite=\"ecore.ecore#//Book/library\">\n"
+			+ "      <eAnnotations source=\"http://www.eclipse.org/OCL/Collection\">\n"
+			+ "        <details key=\"nullFree\" value=\"false\"/>\n"
+			+ "      </eAnnotations>\n"
+			+ "    </eStructuralFeatures>\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"loans\" ordered=\"false\"\n"
+			+ "        upperBound=\"-1\" eType=\"ecore:EClass ecore.ecore#//Loan\" containment=\"true\">\n"
+			+ "      <eAnnotations source=\"http://www.eclipse.org/OCL/Collection\">\n"
+			+ "        <details key=\"nullFree\" value=\"false\"/>\n"
+			+ "      </eAnnotations>\n"
+			+ "    </eStructuralFeatures>\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"members\" ordered=\"false\"\n"
+			+ "        upperBound=\"-1\" eType=\"ecore:EClass ecore.ecore#//Member\" containment=\"true\"\n"
+			+ "        eOpposite=\"ecore.ecore#//Member/library\">\n"
+			+ "      <eAnnotations source=\"http://www.eclipse.org/OCL/Collection\">\n"
+			+ "        <details key=\"nullFree\" value=\"false\"/>\n"
+			+ "      </eAnnotations>\n"
+			+ "    </eStructuralFeatures>\n"
+			+ "  </eClassifiers>\n"
+			+ "  <eClassifiers xsi:type=\"ecore:EClass\" name=\"Book\">\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"name\" lowerBound=\"1\" eType=\"ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString\"/>\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"copies\" lowerBound=\"1\"\n"
+			+ "        eType=\"ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigInteger\"/>\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"library\" eType=\"ecore:EClass ecore.ecore#//Library\"\n"
+			+ "        eOpposite=\"ecore.ecore#//Library/books\"/>\n"
+			+ "  </eClassifiers>\n"
+			+ "  <eClassifiers xsi:type=\"ecore:EClass\" name=\"Member\">\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"name\" lowerBound=\"1\" eType=\"ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString\"/>\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"library\" eType=\"ecore:EClass ecore.ecore#//Library\"\n"
+			+ "        eOpposite=\"ecore.ecore#//Library/members\"/>\n"
+			+ "  </eClassifiers>\n"
+			+ "  <eClassifiers xsi:type=\"ecore:EClass\" name=\"Loan\">\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"book\" lowerBound=\"1\" eType=\"ecore:EClass ecore.ecore#//Book\"/>\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"member\" lowerBound=\"1\"\n"
+			+ "        eType=\"ecore:EClass ecore.ecore#//Member\"/>\n"
+			+ "    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"date\" eType=\"ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate\"/>\n"
+			+ "  </eClassifiers>\n"
+			+ "</ecore:EPackage>";
 }

@@ -10,9 +10,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
-import org.eclipse.emf.emfatic.core.EmfaticResource;
-import org.eclipse.emf.emfatic.core.EmfaticResourceFactory;
 import org.eclipse.epsilon.flexmi.FlexmiResource;
 import org.eclipse.epsilon.flexmi.FlexmiResourceFactory;
 import com.google.gson.JsonObject;
@@ -26,22 +25,23 @@ public class EpsilonTool  {
 	public EpsilonTool() {
 		
 		// Register resource factories
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("emfatic", new EmfaticResourceFactory());
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", new EcoreResourceFactoryImpl());
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("flexmi", new FlexmiResourceFactory());
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
+		
 	}
 
 	
-	public void convertFlexmiToXmi(String flexmi, String emfatic,  OutputStream outputStream, JsonObject response) throws Exception {
+	public void convertFlexmiToXmi(String flexmi, String ecore,  OutputStream outputStream, JsonObject response) throws Exception {
 		
-		final String emfaticFilename = "emfatic.emfatic";
+		final String emfaticFilename = "ecore.ecore";
 		
 		/*-------------------------------------
 		 *  Load Metamodel 
 		 *-------------------------------------*/
 		ResourceSet resourceSet = new ResourceSetImpl();
 		
-		EPackage epkg = EmfResourceLoader.loadMetamodel( resourceSet, emfatic, emfaticFilename, EmfaticResource.class);
+		EPackage epkg = EmfResourceLoader.loadMetamodel( resourceSet, ecore, emfaticFilename, Resource.class);
 		
 		resourceSet.getPackageRegistry().put(epkg.getNsURI(), epkg ); // Register the metamodel uri
 		
