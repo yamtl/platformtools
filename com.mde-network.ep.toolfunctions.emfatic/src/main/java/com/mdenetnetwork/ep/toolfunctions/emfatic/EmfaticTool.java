@@ -55,11 +55,12 @@ public class EmfaticTool  {
 		BufferedReader reader = new BufferedReader(emfaticInput);
 		EmfaticParserDriver parser = new EmfaticParserDriver(URI.createURI(emfaticFilename));
 		ParseContext parseContext = parser.parse(reader);
-		String filePath = emfaticFilename.replaceAll("\\.emfatic$", ".ecore");
+		String filePath = "ecore.ecore";
 		
 		//Resource resource = createResource(filePath, false);
 		Resource resource = resourceSet.createResource( URI.createURI(filePath)  );
 
+		
 		
 		Builder builder = new Builder();
 		builder.build(parseContext, resource, null); // Monitor not actually used by called method

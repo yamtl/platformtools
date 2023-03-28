@@ -16,7 +16,7 @@ public class RunConversionFlexmiToXmi extends MdeNetToolFunction {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		
 		new EpsilonTool().convertFlexmiToXmi(request.get("input").getAsString(),      // flexmi
-											 request.get("metamodel").getAsString(),  // emfatic
+											 request.get("metamodel").getAsString(),  // ecore
 											 bos, response);
 		
 	}
