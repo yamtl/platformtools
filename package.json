@@ -1,0 +1,10 @@
+
+{
+  "name": "MDENet-EP-Tools-Static",
+  "workspaces": [
+    "static.emf",
+    "static.emfatic",
+    "static.epsilon",
+    "static.ocl"
+  ]
+}
