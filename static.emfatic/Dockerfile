@@ -1,5 +1,21 @@
 # syntax=docker/dockerfile:1
 
+
+FROM node:19-bullseye AS toolstaticbuild
+
+WORKDIR /usr/src/mdenet-tool
+
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY static.emfatic/package*.json ./
+
+COPY static.emfatic .
+
+RUN npm install; npm run build
+
+
+
 FROM nginx:1.24.0-bullseye AS toolservice
 
 # Needed to avoid prompts blocking the build process
@@ -21,7 +37,7 @@ RUN apt-get update \
 COPY static.emfatic/nginx.conf.template /etc/nginx.conf.template
 
 RUN rm -r /usr/share/nginx/html/*
-COPY static.emfatic/dist /usr/share/nginx/html
+COPY --from=toolstaticbuild /usr/src/mdenet-tool/dist /usr/share/nginx/html
 
 WORKDIR /toolservice
 
