@@ -1,0 +1,23 @@
+server {
+ listen ${PORT};
+
+ location /services/EcoreToEmfatic {
+   proxy_pass http://127.0.0.1:8001/;
+ }
+
+ location /services/EmfaticToEcore {
+   proxy_pass http://127.0.0.1:8002/;
+ }
+
+  location / {
+      root   /usr/share/nginx/html;
+      index  index.html index.htm;
+      
+      add_header 'Access-Control-Allow-Origin' '*';
+      
+      autoindex on;
+      autoindex_format html;
+  }
+
+
+}
