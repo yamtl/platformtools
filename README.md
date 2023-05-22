@@ -4,13 +4,13 @@ This repository contains the backend tool functions for the MDENet education pla
 
 See the readme file in the respective tool directory for instructions on running a particular tool 
 
-[Eclipse OCL](com.mde-network.ep.toolfunctions.eclipseoclfunction/README.md)
+[Eclipse OCL](services/com.mde-network.ep.toolfunctions.eclipseoclfunction/README.md)
 
-[Epsilon](epsilon/README.md)[^epsilon]
+[Epsilon](services/epsilon/README.md)[^epsilon]
 
-[Epsilon (MDENet)](com.mde-network.ep.toolfunctions.epsilonfunction/README.md)
+[Epsilon (MDENet)](services/com.mde-network.ep.toolfunctions.epsilonfunction/README.md)
 
-[Emfatic](com.mde-network.ep.toolfunctions.emfaticfunction/README.md)
+[Emfatic](services/com.mde-network.ep.toolfunctions.emfaticfunction/README.md)
 
 
 [^epsilon]: The Epsilon tool functions are a fork of 
