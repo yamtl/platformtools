@@ -1,5 +1,20 @@
 # syntax=docker/dockerfile:1
 
+FROM maven:3.8-openjdk-17 AS toolfunctions
+
+COPY services /usr/src/toolfunctions
+
+WORKDIR /usr/src/toolfunctions
+
+RUN mvn clean install
+
+# Get runtime dependencies 
+RUN mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:get -Dartifact=com.google.cloud.functions:function-maven-plugin:0.9.5 && mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:get -Dartifact=org.apache.maven.plugins:maven-deploy-plugin:2.7 
+
+
+
+
+
 FROM node:19-bullseye AS toolstaticbuild
 
 WORKDIR /usr/src/mdenet-tool
@@ -31,6 +46,10 @@ RUN apt-get update \
 
 # Copy tool sources
 COPY services/epsilon /toolservice
+
+# Copy additional built tool and sources
+COPY --from=toolfunctions /root/.m2 /root/.m2
+COPY --from=toolfunctions /usr/src/toolfunctions /toolservice-add
 
 # Copy files for webserver
 COPY static.epsilon/nginx.conf.template /etc/nginx.conf.template

@@ -26,12 +26,12 @@ wait_for_service() {
     done
 }
 
-#TODO dockerize the build of eclipse based tools
+
 # Functions for running OCL 
-#cd com.mde-network.ep.toolfunctions.eclipseoclfunction
-#mvn -B -o function:run -Drun.functionTarget=com.mdenetnetwork.ep.toolfunctions.eclipseoclfunction.RunEclipseOclFunction -Drun.port=8001 &
-#wait_for_service validate 127.0.0.1 8001
-#cd ..
+cd com.mde-network.ep.toolfunctions.eclipseoclfunction
+mvn -B -o function:run -Drun.functionTarget=com.mdenetnetwork.ep.toolfunctions.eclipseoclfunction.RunEclipseOclFunction -Drun.port=8001 &
+wait_for_service validate 127.0.0.1 8001
+cd ..
 
 
 # nginx as frontend + reverse proxy

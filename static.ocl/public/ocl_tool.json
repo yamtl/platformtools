@@ -20,7 +20,7 @@
 
                 "returnType": "text",
 
-                "path": "http://localhost:9090"
+                "path": "http://127.0.0.1:8072/services/RunOclFunction"
 
             }
 

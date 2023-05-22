@@ -1,5 +1,18 @@
 # syntax=docker/dockerfile:1
 
+FROM maven:3.8-openjdk-17 AS toolfunctions
+
+COPY services /usr/src/toolfunctions
+
+WORKDIR /usr/src/toolfunctions
+
+RUN mvn clean install
+
+# Get runtime dependencies 
+RUN mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:get -Dartifact=com.google.cloud.functions:function-maven-plugin:0.9.5 && mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:get -Dartifact=org.apache.maven.plugins:maven-deploy-plugin:2.7 
+
+
+
 FROM node:19-bullseye AS toolstaticbuild
 
 WORKDIR /usr/src/mdenet-tool
@@ -25,12 +38,12 @@ ENV PORT=80
 
 # Install Python
 RUN apt-get update \
-    && apt-get install -y python3-minimal maven tini netcat \
+    && apt-get install -y python3-minimal openjdk-17-jdk maven tini netcat \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy tool sources
-#COPY services /toolservice
-#COPY services/pom.xml services/.project /toolservice/
+# Copy built tool and sources
+COPY --from=toolfunctions /root/.m2 /root/.m2
+COPY --from=toolfunctions /usr/src/toolfunctions /toolservice
 
 # Copy files for webserver
 COPY static.ocl/nginx.conf.template /etc/nginx.conf.template
