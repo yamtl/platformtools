@@ -11,7 +11,7 @@ COPY static.emf/package*.json ./
 
 COPY static.emf .
 
-RUN npm install; npm run build
+RUN npm install; npm run build; chmod -R 755 dist/
 
 
 

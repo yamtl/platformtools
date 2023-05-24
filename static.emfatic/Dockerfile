@@ -15,7 +15,7 @@ COPY static.emfatic/package*.json ./
 
 COPY static.emfatic .
 
-RUN npm install; npm run build
+RUN npm install; npm run build; chmod -R 755 dist/
 
 
 

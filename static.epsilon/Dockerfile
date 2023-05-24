@@ -15,7 +15,7 @@ COPY static.epsilon/package*.json ./
 
 COPY static.epsilon .
 
-RUN npm install; npm run build
+RUN npm install; npm run build; chmod -R 755 dist/
 
 
 

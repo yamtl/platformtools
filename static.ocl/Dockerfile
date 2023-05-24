@@ -15,7 +15,7 @@ COPY static.ocl/package*.json ./
 
 COPY static.ocl .
 
-RUN npm install; npm run build
+RUN npm install; npm run build; chmod -R 755 dist/
 
 
 
