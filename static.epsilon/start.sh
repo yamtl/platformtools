@@ -36,6 +36,12 @@ wait_for_service Flexmi  127.0.0.1 8002
 mvn -B -o function:run -Drun.functionTarget=org.eclipse.epsilon.live.EmfaticToPlantUMLFunction -Drun.port=8003 &
 wait_for_service Emfatic 127.0.0.1 8003
 
+# additional functions
+cd /toolservice-add/com.mde-network.ep.toolfunctions.epsilonfunction
+mvn -B -o function:run -Drun.functionTarget=com.mdenetnetwork.ep.toolfunctions.epsilonfunction.RunConversionFlexmiToXmi -Drun.port=8004 &
+wait_for_service FlexmiToXmi 127.0.0.1 8004
+
+
 # nginx as frontend + reverse proxy
 envsubst < /etc/nginx.conf.template > /etc/nginx/conf.d/default.conf
 nginx -g "daemon off;" &

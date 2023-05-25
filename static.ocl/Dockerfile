@@ -1,5 +1,25 @@
 # syntax=docker/dockerfile:1
 
+FROM maven:3.8.5-openjdk-17 AS toolfunctions
+
+#Copy ocl toolfunction source and its dependencies
+COPY services/com.mde-network.ep.toolfunctions.core /usr/src/toolfunctions/com.mde-network.ep.toolfunctions.core
+COPY services/com.mde-network.ep.toolfunctions.eclipseocl /usr/src/toolfunctions/com.mde-network.ep.toolfunctions.eclipseocl
+COPY services/com.mde-network.ep.toolfunctions.eclipseoclfunction /usr/src/toolfunctions/com.mde-network.ep.toolfunctions.eclipseoclfunction
+COPY services/pom.xml /usr/src/toolfunctions/
+
+WORKDIR /usr/src/toolfunctions
+
+RUN mvn clean install -Pocl
+
+# Get runtime dependencies 
+RUN mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:get -Dartifact=com.google.cloud.functions:function-maven-plugin:0.9.5 && mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:get -Dartifact=org.apache.maven.plugins:maven-deploy-plugin:2.7 
+
+WORKDIR /usr/src/toolfunctions
+
+
+
+
 FROM node:19-bullseye AS toolstaticbuild
 
 WORKDIR /usr/src/mdenet-tool
@@ -11,7 +31,7 @@ COPY static.ocl/package*.json ./
 
 COPY static.ocl .
 
-RUN npm install; npm run build
+RUN npm install; npm run build; chmod -R 755 dist/
 
 
 
@@ -25,12 +45,12 @@ ENV PORT=80
 
 # Install Python
 RUN apt-get update \
-    && apt-get install -y python3-minimal maven tini netcat \
+    && apt-get install -y python3-minimal openjdk-17-jdk maven tini netcat \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy tool sources
-#COPY services /toolservice
-#COPY services/pom.xml services/.project /toolservice/
+# Copy built tool and sources
+COPY --from=toolfunctions /root/.m2 /root/.m2
+COPY --from=toolfunctions /usr/src/toolfunctions /toolservice
 
 # Copy files for webserver
 COPY static.ocl/nginx.conf.template /etc/nginx.conf.template
