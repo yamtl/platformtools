@@ -1,5 +1,24 @@
 # syntax=docker/dockerfile:1
 
+FROM maven:3.8.5-openjdk-17 AS toolfunctions
+
+#Copy emf toolfunction source and its dependencies
+COPY services/com.mde-network.ep.toolfunctions.core /usr/src/toolfunctions/com.mde-network.ep.toolfunctions.core
+COPY services/com.mde-network.ep.toolfunctions.emf /usr/src/toolfunctions/com.mde-network.ep.toolfunctions.emf
+COPY services/com.mde-network.ep.toolfunctions.emffunction /usr/src/toolfunctions/com.mde-network.ep.toolfunctions.emffunction
+COPY services/pom.xml /usr/src/toolfunctions/
+
+WORKDIR /usr/src/toolfunctions
+
+RUN mvn clean install -Pemf
+
+# Get runtime dependencies 
+RUN mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:get -Dartifact=com.google.cloud.functions:function-maven-plugin:0.9.5 && mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:get -Dartifact=org.apache.maven.plugins:maven-deploy-plugin:2.7 
+
+WORKDIR /usr/src/toolfunctions
+
+
+
 FROM node:19-bullseye AS toolstaticbuild
 
 WORKDIR /usr/src/mdenet-tool
@@ -28,9 +47,9 @@ RUN apt-get update \
     && apt-get install -y python3-minimal maven tini netcat \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy tool sources
-#COPY services /toolservice
-#COPY services/pom.xml services/.project /toolservice/
+# Copy built tool and sources
+COPY --from=toolfunctions /root/.m2 /root/.m2
+COPY --from=toolfunctions /usr/src/toolfunctions /toolservice
 
 # Copy files for webserver
 COPY static.emf/nginx.conf.template /etc/nginx.conf.template

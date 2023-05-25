@@ -1,7 +1,23 @@
 # syntax=docker/dockerfile:1
 
+FROM maven:3.8.5-openjdk-17 AS toolfunctions
 
-FROM mdenet-tool-build:latest AS toolfunctions
+#Copy epsilon toolfunction source and its dependencies
+COPY services/com.mde-network.ep.toolfunctions.core /usr/src/toolfunctions/com.mde-network.ep.toolfunctions.core
+COPY services/com.mde-network.ep.toolfunctions.emf /usr/src/toolfunctions/com.mde-network.ep.toolfunctions.emf
+COPY services/com.mde-network.ep.toolfunctions.epsilon /usr/src/toolfunctions/com.mde-network.ep.toolfunctions.epsilon
+COPY services/com.mde-network.ep.toolfunctions.epsilonfunction /usr/src/toolfunctions/com.mde-network.ep.toolfunctions.epsilonfunction
+COPY services/pom.xml /usr/src/toolfunctions/
+
+WORKDIR /usr/src/toolfunctions
+
+RUN mvn clean install -Pepsilon
+
+# Get runtime dependencies 
+RUN mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:get -Dartifact=com.google.cloud.functions:function-maven-plugin:0.9.5 && mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.0:get -Dartifact=org.apache.maven.plugins:maven-deploy-plugin:2.7 
+
+WORKDIR /usr/src/toolfunctions
+
 
 
 FROM node:19-bullseye AS toolstaticbuild
