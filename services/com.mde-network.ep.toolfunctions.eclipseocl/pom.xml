@@ -49,7 +49,7 @@
   	<properties>
 		<maven.compiler.target>11</maven.compiler.target>
 		<maven.compiler.source>11</maven.compiler.source>
-		<epsilon.version>2.4.0-20211206.133338-37</epsilon.version>
+		<epsilon.version>2.4.0</epsilon.version>
 		<tycho-version>3.0.3</tycho-version>		
 	</properties>
 	
