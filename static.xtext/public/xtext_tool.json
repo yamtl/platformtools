@@ -1,0 +1,64 @@
+{
+    "tool": 
+        {
+            "id": "xtext",
+    
+            "name": "Xtext",
+    
+            "functions": [
+    
+                {
+    
+                    "id": "function-xtext",
+    
+                    "name": "xtext",
+    
+                    "parameters": [ {"name":"grammar", "type":"xtext"} ],
+    
+                    "returnType": "text",
+    
+                    "path": "http://127.0.0.1:8074/services/RunXtextFunction"
+    
+                }
+    
+            ],
+    
+    
+    
+            "panelDefs": [
+    
+                {
+    
+                    "id": "xtext-grammar",
+    
+                    "name": "xtext",
+    
+                    "panelclass": "ProgramPanel",
+    
+                    "icon": "xtext",
+    
+                    "language": "xtext",
+    
+                    "buttons" : [ 
+                        { 
+                            "id": "action-button", 
+                            "icon": "run",
+                            "actionfunction": "function-xtext",
+                            "hint": "Generate Editor (Ctrl/Cmd+S)" 
+                          },
+                          { 
+                            "id": "help-button", 
+                            "icon": "info",
+                            "url": "https://www.eclipse.org/Xtext/documentation/301_grammarlanguage.html",
+                            "hint": "Xtext Gramar Reference" 
+                          }
+                    ]
+    
+                }
+    
+            ]
+        }
+    
+    
+    } 
+    
