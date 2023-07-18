@@ -54,8 +54,31 @@
                           }
                     ]
     
-                }
+                },
     
+                {
+    
+                    "id": "xtext-editor",
+    
+                    "name": "xtext",
+    
+                    "panelclass": "XtextEditorPanel",
+    
+                    "icon": "xtext",
+    
+                    "language": "xtext",
+    
+                    "buttons" : [ 
+                          { 
+                            "id": "help-button", 
+                            "icon": "info",
+                            "url": "https://www.turtles-language.com",
+                            "hint": "Turtles Instance" 
+                          }
+                    ]
+    
+                }
+
             ]
         }
     
