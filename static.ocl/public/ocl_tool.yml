@@ -1,0 +1,35 @@
+tool:
+  functions:
+  - id: function-ocl
+    name: completeocl
+    parameters:
+    - name: metamodel
+      type: emfatic
+    - name: constraints
+      type: oclcomplete
+    - instanceOf: metamodel
+      name: model
+      type: xmi
+    - name: language
+      type: string
+    path: http://127.0.0.1:8072/services/RunOclFunction
+    returnType: text
+  id: ocl
+  name: OCL
+  panelDefs:
+  - buttons:
+    - actionfunction: function-ocl
+      hint: Run the program (Ctrl/Cmd+S)
+      icon: run
+      id: action-button
+    - hint: OCL Language Reference
+      icon: info
+      id: help-button
+      url: https://download.eclipse.org/ocl/doc/6.4.0/ocl.pdf
+    icon: ocl
+    id: complete-ocl
+    language: oclcomplete
+    name: ocl
+    panelclass: ProgramPanel
+
+
