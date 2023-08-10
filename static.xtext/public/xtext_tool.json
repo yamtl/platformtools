@@ -31,7 +31,7 @@
     
                     "id": "xtext-grammar",
     
-                    "name": "xtext",
+                    "name": "Xtext",
     
                     "panelclass": "ProgramPanel",
     
@@ -60,20 +60,18 @@
     
                     "id": "xtext-editor",
     
-                    "name": "xtext",
+                    "name": "Xtext Language Instance",
     
                     "panelclass": "XtextEditorPanel",
     
                     "icon": "xtext",
     
-                    "language": "xtext",
-    
                     "buttons" : [ 
                           { 
                             "id": "help-button", 
                             "icon": "info",
-                            "url": "https://www.turtles-language.com",
-                            "hint": "Turtles Instance" 
+                            "url": "https://",
+                            "hint": "" 
                           }
                     ]
     
