@@ -44,7 +44,9 @@
             <module>com.mde-network.ep.toolfunctions.emfatic</module>
             <module>com.mde-network.ep.toolfunctions.emfaticfunction</module>
             <module>com.mde-network.ep.toolfunctions.epsilon</module>
-            <module>com.mde-network.ep.toolfunctions.epsilonfunction</module>  
+            <module>com.mde-network.ep.toolfunctions.epsilonfunction</module>
+            <module>com.mde-network.ep.toolfunctions.xtext</module>
+            <module>com.mde-network.ep.toolfunctions.xtextfunction</module>   
       </modules>
     </profile>
     <profile>
@@ -79,6 +81,14 @@
         <module>com.mde-network.ep.toolfunctions.core</module>
         <module>com.mde-network.ep.toolfunctions.eclipseocl</module>
         <module>com.mde-network.ep.toolfunctions.eclipseoclfunction</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>xtext</id>
+      <modules>
+        <module>com.mde-network.ep.toolfunctions.core</module>
+        <module>com.mde-network.ep.toolfunctions.xtext</module>
+        <module>com.mde-network.ep.toolfunctions.xtextfunction</module> 
       </modules>
     </profile>
    </profiles>
