@@ -12,14 +12,15 @@ class XtextController {
 
     constructor(multipartHandler) {
         this.upload = multipartHandler;
-        this.router.post('/upload', this.upload.single('file'), asyncCatch(this.saveProject));
+        this.router.post('/upload', this.upload.single('xtextProject'), asyncCatch(this.saveProject));
     }
 
     saveProject = async (req, res, next) => {
         try {
             //TODO validate request url
 
-            res.status(200).json(userData);
+            res.sendStatus(200)
+            
         } catch (err) {
             next(err);
         }

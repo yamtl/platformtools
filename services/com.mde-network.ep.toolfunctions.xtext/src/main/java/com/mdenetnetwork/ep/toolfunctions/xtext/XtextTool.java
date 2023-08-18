@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import java.io.FileOutputStream;
@@ -16,10 +18,27 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 import org.eclipse.xtext.xtext.wizard.cli.CliProjectsCreatorMain;
 
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.entity.mime.FileBody;
+import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.client5.http.entity.mime.StringBody;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.message.StatusLine;
+import org.apache.hc.core5.util.Timeout;
+import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.client5.http.entity.mime.HttpMultipartMode;
+import org.apache.hc.client5.http.fluent.Form;
+import org.apache.hc.client5.http.fluent.Request;
+
 public class XtextTool  { 
 
 	static final String PROJECT_PATH = "./xtext-project/" ;
-	static final String PROJECT_FILE_PATH = "./xtext-project.zip" ;
+	static final String PROJECT_FILENAME = "xtext-project.zip" ;
+	static final String PROJECT_FILE_PATH = "./" + PROJECT_FILENAME ;
 	static final int FILE_BUFFER_SIZE = 1024;
 	
 	public XtextTool() {
@@ -51,12 +70,17 @@ public class XtextTool  {
 
 		CliProjectsCreatorMain.main(args);
 		
-		 ZipOutputStream projectFile = new ZipOutputStream( new FileOutputStream(PROJECT_FILE_PATH) );
+		 ZipOutputStream projectFileStream = new ZipOutputStream( new FileOutputStream(PROJECT_FILE_PATH) );
 		
-		 compressDirectory(projectFolder, "", projectFile);
+		 compressDirectory(projectFolder, "", projectFileStream);
 		 
-		 projectFile.flush();
-		 projectFile.close();
+		 projectFileStream.flush();
+		 projectFileStream.close();
+		 
+		 
+
+		 postProjectToUrl(new File(PROJECT_FILE_PATH), "http://127.0.0.1:10001/xtext/upload"); // TODO set URL via environment variable 
+
 		 
 		 outputStream.write(result.getBytes());
 	}
@@ -122,6 +146,23 @@ public class XtextTool  {
 		}
 	}
 	
+	
+	private String postProjectToUrl(File project, String url) throws IOException {
 		
+		 HttpEntity entity = MultipartEntityBuilder.create()
+				 .setMode(HttpMultipartMode.LEGACY)
+				 .setCharset(Charset.forName("UTF8"))
+				 .addBinaryBody("xtextProject", project, ContentType.MULTIPART_FORM_DATA, PROJECT_FILENAME)
+				 .build();
+		 
+		 String uploadResponse = Request.post(url)
+				 .body(entity)
+				 .execute().returnContent().asString();
+		
+		String editorUrl = "TODO"; //TODO parse response to get editor url
+		
+		return editorUrl;
+	}
+
 }
 	
