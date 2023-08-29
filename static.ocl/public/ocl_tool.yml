@@ -1,7 +1,12 @@
 tool:
+  id: ocl
+  name: Eclipse OCL
+  version: 0.0.1
+  author: MDENet
+  homepage: https://github.com/mdenet/platformtools
   functions:
   - id: function-ocl
-    name: completeocl
+    name: OCL
     parameters:
     - name: metamodel
       type: emfatic
@@ -14,8 +19,6 @@ tool:
       type: string
     path: http://127.0.0.1:8072/services/RunOclFunction
     returnType: text
-  id: ocl
-  name: OCL
   panelDefs:
   - buttons:
     - actionfunction: function-ocl
