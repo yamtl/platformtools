@@ -6,7 +6,7 @@ tool:
   homepage: https://github.com/mdenet/platformtools
   functions:
   - id: function-ocl
-    name: OCL
+    name: completeocl
     parameters:
     - name: metamodel
       type: emfatic
