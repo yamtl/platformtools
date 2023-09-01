@@ -1,0 +1,15 @@
+services:
+
+    mdenet-tool-xtext:
+      image: mdenet-tool-xtext:latest
+      ports: 
+          - 10001:10001
+          - 9001:8080
+      volumes:
+          - war_files:/editorserver/uploads
+
+      build:
+          context: .
+
+volumes:
+    war_files: 

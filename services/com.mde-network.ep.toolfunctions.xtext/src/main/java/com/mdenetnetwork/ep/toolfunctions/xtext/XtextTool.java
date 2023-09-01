@@ -63,9 +63,9 @@ public class XtextTool  {
 				"-buildSystem=MAVEN",
 				"-sourceLayout=PLAIN",
 				"-languageServer=FATJAR",
-				"-xtextVersion=undefined",
+				"-xtextVersion=2.30.0",
 				"-projectLayout=FLAT",
-				"-javaVersion=JAVA10"
+				"-javaVersion=JAVA11"
 			};
 
 		CliProjectsCreatorMain.main(args);
