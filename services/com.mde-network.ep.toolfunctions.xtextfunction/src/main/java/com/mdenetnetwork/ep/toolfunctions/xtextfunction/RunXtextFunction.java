@@ -16,8 +16,11 @@ public class RunXtextFunction extends MdeNetToolFunction {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		
 		new XtextTool().
-			run(	request.get("input").getAsString() ,
-					bos, response);
+			run( request.get("languageName").getAsString() , 
+				 request.get("baseName").getAsString(), 
+				 request.get("extension").getAsString(),
+				 request.get("projectFiles").getAsString(),
+				 bos, response);
 			
 		response.addProperty("output", bos.toString());
 	}

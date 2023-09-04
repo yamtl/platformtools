@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -17,7 +18,7 @@ import com.google.gson.JsonObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 import org.eclipse.xtext.xtext.wizard.cli.CliProjectsCreatorMain;
-
+import org.apache.hc.client5.http.HttpHostConnectException;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.entity.mime.FileBody;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
@@ -26,6 +27,7 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.message.StatusLine;
 import org.apache.hc.core5.util.Timeout;
@@ -48,7 +50,7 @@ public class XtextTool  {
 	}
 
 
-	public void run(String input, OutputStream outputStream, JsonObject response) throws Exception {
+	public void run(String languageName, String baseName, String extension, String projectFiles, OutputStream outputStream, JsonObject response) throws Exception {
 	
 		String result = "";
 		
@@ -56,9 +58,9 @@ public class XtextTool  {
 		
 		String[] args = new String[] {
 				"-targetDir=" + projectFolder.getAbsolutePath(),
-				"-languageName=org.xtext.example.mydsl.MyDsl",
-				"-baseName=org.xtext.example.mydsl",
-				"-extension=mydsl",
+				"-languageName="+languageName,
+				"-baseName="+baseName,
+				"-extension="+extension,
 				"-enabledProjects=UIProject,GenericIDE,RuntimeTest,UITest,Web",
 				"-buildSystem=MAVEN",
 				"-sourceLayout=PLAIN",
@@ -77,12 +79,22 @@ public class XtextTool  {
 		 projectFileStream.flush();
 		 projectFileStream.close();
 		 
+		final String EDITOR_SERVER_URL= "http://127.0.0.1:10001/xtext/upload";  // TODO set URL via environment variable 
 		 
-
-		 postProjectToUrl(new File(PROJECT_FILE_PATH), "http://127.0.0.1:10001/xtext/upload"); // TODO set URL via environment variable 
-
+		 try {	 
+			 postProjectToUrl(new File(PROJECT_FILE_PATH), EDITOR_SERVER_URL);
+			 outputStream.write(result.getBytes());
+			 
+		 } catch (HttpHostConnectException e)  {
 		 
-		 outputStream.write(result.getBytes());
+			 System.err.println("Failed to connect to editor server: " + EDITOR_SERVER_URL);
+			 
+		}finally {
+			 // Cleanup created files
+			 deleteDir(projectFolder);
+			 new File(PROJECT_FILE_PATH).delete();
+		 }
+
 	}
 
 	
@@ -158,10 +170,23 @@ public class XtextTool  {
 		 String uploadResponse = Request.post(url)
 				 .body(entity)
 				 .execute().returnContent().asString();
+
 		
 		String editorUrl = "TODO"; //TODO parse response to get editor url
 		
 		return editorUrl;
+	}
+	
+	private void deleteDir(File dir){
+	    File[] contents = dir.listFiles();
+	    if (contents != null) {
+	        for (File f : contents) {
+	            if (! Files.isSymbolicLink(f.toPath())) {
+	                deleteDir(f);
+	            }
+	        }
+	    }
+	    dir.delete();
 	}
 
 }
