@@ -87,6 +87,7 @@
       <id>xtext</id>
       <modules>
         <module>com.mde-network.ep.toolfunctions.core</module>
+        <module>com.mde-network.ep.toolfunctions.emf</module>
         <module>com.mde-network.ep.toolfunctions.xtext</module>
         <module>com.mde-network.ep.toolfunctions.xtextfunction</module> 
       </modules>
