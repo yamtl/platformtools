@@ -5,6 +5,12 @@
 
         "name": "Epsilon",
 
+        "version": "0.0.1",
+        
+        "author": "Eclipse Epsilon",
+        
+        "homepage": "https://eclipse.dev/epsilon/",
+
         "functions": [
 
             {
