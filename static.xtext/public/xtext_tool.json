@@ -13,11 +13,16 @@
     
                     "name": "xtext",
     
-                    "parameters": [ {"name":"grammar", "type":"xtext"} ],
+                    "parameters": [ {"name":"languageName", "type":"text"}, 
+                                    {"name":"baseName", "type":"text"},
+                                    {"name":"extension", "type":"text"},
+                                    {"name":"grammar", "type":"xtext"},
+                                    {"name":"projectFiles", "type":"[text]"}, 
+                                    {"name":"language", "type":"text"}],
     
                     "returnType": "text",
     
-                    "path": "http://127.0.0.1:8074/services/RunXtextFunction"
+                    "path": "http://127.0.0.1:9000"
     
                 }
     

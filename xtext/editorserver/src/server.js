@@ -36,6 +36,6 @@ expressApp.use(errorHandlingMiddleware);
 
 
 expressApp.listen(config.port, function() {
-  console.log(`Auth server is listening on HTTP port ${config.port}`)
+  console.log(`Editor server is listening on HTTP port ${config.port}`)
 })
 

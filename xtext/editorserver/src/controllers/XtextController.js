@@ -39,7 +39,10 @@ class XtextController {
                 console.log(`building ${req.file.filename} completed with code ${code}`);
             }); 
 
-            res.sendStatus(200)
+            let response = {};
+            response.editorUrl= `${config.deployAddress}/${req.file.filename}`;
+
+            res.status(200).json(response);
             
         } catch (err) {
             next(err);

@@ -11,32 +11,22 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 import org.eclipse.xtext.xtext.wizard.cli.CliProjectsCreatorMain;
 import org.apache.hc.client5.http.HttpHostConnectException;
-import org.apache.hc.client5.http.classic.methods.HttpPost;
-import org.apache.hc.client5.http.entity.mime.FileBody;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
-import org.apache.hc.client5.http.entity.mime.StringBody;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
-import org.apache.hc.core5.http.HttpResponse;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
-import org.apache.hc.core5.http.message.StatusLine;
-import org.apache.hc.core5.util.Timeout;
-import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
 import org.apache.hc.client5.http.entity.mime.HttpMultipartMode;
-import org.apache.hc.client5.http.fluent.Form;
 import org.apache.hc.client5.http.fluent.Request;
 
 public class XtextTool  { 
@@ -44,6 +34,7 @@ public class XtextTool  {
 	static final String PROJECT_PATH = "./xtext-project/" ;
 	static final String PROJECT_FILENAME = "xtext-project.zip" ;
 	static final String PROJECT_FILE_PATH = "./" + PROJECT_FILENAME ;
+	static final String ES_JSON_RESPONSE_FIELD = "editorUrl";
 	static final int FILE_BUFFER_SIZE = 1024;
 	
 	public XtextTool() {
@@ -55,7 +46,7 @@ public class XtextTool  {
 
 	public void run(String languageName, String baseName, String extension, String grammar, List<ProjectFile> projectFiles, OutputStream outputStream, JsonObject response) throws Exception {
 
-		String result = "";
+
 		
 		// Create Xtext project with web editor enabled
 		File projectFolder = new File(PROJECT_PATH);
@@ -81,9 +72,11 @@ public class XtextTool  {
 		
 		
 		// Add activity files
-		final String grammarSrcPath = languageName.replace('.', '/');
-		final String xtextGrammarPath= PROJECT_PATH + baseName + "/src/" + grammarSrcPath  + ".xtext";
-		recreateGrammarFile(xtextGrammarPath, grammar);
+		if (grammar != null) {
+			final String grammarSrcPath = languageName.replace('.', '/');
+			final String xtextGrammarPath= PROJECT_PATH + baseName + "/src/" + grammarSrcPath  + ".xtext";
+			recreateGrammarFile(xtextGrammarPath, grammar);
+		}
 		
 		//TODO add activity files
 		
@@ -103,8 +96,8 @@ public class XtextTool  {
 		final String EDITOR_SERVER_URL= "http://127.0.0.1:10001/xtext/upload";  // TODO set URL via environment variable 
 		 
 		 try {	 
-			 postProjectToUrl(new File(PROJECT_FILE_PATH), EDITOR_SERVER_URL);
-			 outputStream.write(result.getBytes());
+			 String deployUrl = postProjectToUrl(new File(PROJECT_FILE_PATH), EDITOR_SERVER_URL);
+			 response.addProperty(ES_JSON_RESPONSE_FIELD, deployUrl);
 			 
 		 } catch (HttpHostConnectException e)  {
 		 
@@ -211,9 +204,12 @@ public class XtextTool  {
 				 .execute().returnContent().asString();
 
 		
+		 System.out.print(uploadResponse);
 		String editorUrl = "TODO"; //TODO parse response to get editor url
 		
-		return editorUrl;
+		JsonObject jsonObject = JsonParser.parseString(uploadResponse).getAsJsonObject();
+		
+		return jsonObject.get(ES_JSON_RESPONSE_FIELD).getAsString();
 	}
 	
 	private void deleteDir(File dir){
