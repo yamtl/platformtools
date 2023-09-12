@@ -8,6 +8,9 @@ import java.io.FileNotFoundException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -50,10 +53,11 @@ public class XtextTool  {
 	}
 
 
-	public void run(String languageName, String baseName, String extension, String projectFiles, OutputStream outputStream, JsonObject response) throws Exception {
-	
+	public void run(String languageName, String baseName, String extension, String grammar, List<ProjectFile> projectFiles, OutputStream outputStream, JsonObject response) throws Exception {
+
 		String result = "";
 		
+		// Create Xtext project with web editor enabled
 		File projectFolder = new File(PROJECT_PATH);
 		
 		String[] args = new String[] {
@@ -70,15 +74,32 @@ public class XtextTool  {
 				"-javaVersion=JAVA11"
 			};
 
+		
 		CliProjectsCreatorMain.main(args);
 		
-		 ZipOutputStream projectFileStream = new ZipOutputStream( new FileOutputStream(PROJECT_FILE_PATH) );
 		
-		 compressDirectory(projectFolder, "", projectFileStream);
+		
+		
+		// Add activity files
+		final String grammarSrcPath = languageName.replace('.', '/');
+		final String xtextGrammarPath= PROJECT_PATH + baseName + "/src/" + grammarSrcPath  + ".xtext";
+		recreateGrammarFile(xtextGrammarPath, grammar);
+		
+		//TODO add activity files
+		
+		
+		// Compress files for transfer to build server
+		
+		ZipOutputStream projectFileStream = new ZipOutputStream( new FileOutputStream(PROJECT_FILE_PATH) );
+		
+		compressDirectory(projectFolder, "", projectFileStream);
 		 
-		 projectFileStream.flush();
-		 projectFileStream.close();
+		projectFileStream.flush();
+		projectFileStream.close();
 		 
+		
+		// Send to the build server
+		
 		final String EDITOR_SERVER_URL= "http://127.0.0.1:10001/xtext/upload";  // TODO set URL via environment variable 
 		 
 		 try {	 
@@ -118,7 +139,25 @@ public class XtextTool  {
 		 response.addProperty("output",  generatedY );
 	}
 	
+	
+	private void recreateGrammarFile (String path, String contents) {
+		
+	    System.out.println("Re-creating grammar file: " + path);
+	
+		try {
+			Files.writeString(Path.of(path), contents, StandardOpenOption.TRUNCATE_EXISTING);
+			
+		} catch (IOException e) {
+			
+			System.err.println("Error "+ e.toString() +" saving gramar file: " + path);
+		}
+	}
 
+	private void recreateProjectFiles () {
+		//TODO recreate project files
+	}
+	
+	
 	private void compressDirectory(File dir, String parentDir, ZipOutputStream output )  
 			throws FileNotFoundException, IOException {
 		
