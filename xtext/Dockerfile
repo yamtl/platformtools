@@ -30,14 +30,18 @@ ENV TS_PORT=9000
 # editor server internal port
 ENV ES_PORT=10001 
 
-RUN apt-get update && apt-get install -y --no-install-recommends unzip maven nodejs npm
+RUN apt-get update && apt-get install -y --no-install-recommends unzip zip maven nodejs npm
 
 # Copy built tool and sources
 COPY --from=toolfunctions /root/.m2 /root/.m2
 COPY --from=toolfunctions /usr/src/toolfunctions /toolservice
 
-
+COPY xtext/acemodebundler /acemodebundler
 COPY xtext/editorserver /editorserver
+
+WORKDIR /acemodebundler
+
+RUN npm ci 
 
 WORKDIR /editorserver
 
@@ -49,6 +53,8 @@ EXPOSE ${TS_PORT}
 EXPOSE 8080
 
 COPY xtext/start.sh /editorserver/start.sh
+
+
 RUN chmod +x /editorserver/start.sh
 
 ENTRYPOINT [ "/bin/bash", "start.sh" ]

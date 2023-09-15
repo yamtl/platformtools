@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "name": "acemodebundler",
+  "version": "0.0.1",
+  "description": "",
+  "browser": "mode.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode=development"
+  },
+  "author": "",
+  "license": "",
+  "devDependencies": {
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "ace-builds": "^1.14.0"
+  }
+}

@@ -17,7 +17,7 @@
                                     {"name":"baseName", "type":"text"},
                                     {"name":"extension", "type":"text"},
                                     {"name":"grammar", "type":"xtext"},
-                                    {"name":"projectFiles", "type":"[text]"}, 
+                                    {"name":"projectFiles", "type":"text"}, 
                                     {"name":"language", "type":"text"}],
     
                     "returnType": "text",
@@ -68,6 +68,8 @@
                     "name": "Xtext Language Instance",
     
                     "panelclass": "XtextEditorPanel",
+                    
+                    "generated": "true",
     
                     "icon": "xtext",
     
