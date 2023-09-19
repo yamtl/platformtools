@@ -1,7 +1,7 @@
 import * as express from "express";
 import  { spawn } from "child_process";
+import  fs from "fs";
 
-import {InvalidRequestException} from "../exceptions/InvalidRequestException.js";
 import {asyncCatch} from "../middleware/ErrorHandlingMiddleware.js";
 import { config } from "../config.js";
 
@@ -14,6 +14,7 @@ class XtextController {
     constructor(multipartHandler) {
         this.upload = multipartHandler;
         this.router.post('/upload', this.upload.single('xtextProject'), asyncCatch(this.saveProject));
+        this.router.get('/editors/:editorId/status', asyncCatch(this.editorStatus));
     }
 
     saveProject = async (req, res, next) => {
@@ -40,7 +41,8 @@ class XtextController {
             }); 
 
             let response = {};
-            response.editorUrl= `${config.deployAddress}/${req.file.filename}`;
+            response.editorUrl= `${config.deployAddress}/${req.file.filename}/`;
+            response.editorStatusUrl= `${config.address}/xtext/editors/${req.file.filename}/status`
 
             res.status(200).json(response);
             
@@ -49,6 +51,20 @@ class XtextController {
         }
 
     }
+
+    editorStatus = async (req, res, next) => {
+        try {
+            const editorId = req.params.editorId;
+            console.log(editorId);
+            const filePath = config.deployFileLocation + "/" + editorId;
+            const editorDeployed = fs.existsSync(filePath);
+            res.status(200).json({editorReady: editorDeployed});
+
+        } catch (err) {
+            next(err);
+        }
+    }
+        
 
 }
 

@@ -18,6 +18,7 @@ import java.io.IOException;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
@@ -35,6 +36,7 @@ public class XtextTool  {
 	static final String PROJECT_FILENAME = "xtext-project.zip" ;
 	static final String PROJECT_FILE_PATH = "./" + PROJECT_FILENAME ;
 	static final String ES_JSON_RESPONSE_FIELD = "editorUrl";
+	static final String ES_JSON_RESPONSE_FIELD_STATUS = "editorStatusUrl";
 	static final int FILE_BUFFER_SIZE = 1024;
 	
 	public XtextTool() {
@@ -96,8 +98,7 @@ public class XtextTool  {
 		final String EDITOR_SERVER_URL= "http://127.0.0.1:10001/xtext/upload";  // TODO set URL via environment variable 
 		 
 		 try {	 
-			 String deployUrl = postProjectToUrl(new File(PROJECT_FILE_PATH), EDITOR_SERVER_URL);
-			 response.addProperty(ES_JSON_RESPONSE_FIELD, deployUrl);
+			 postProjectToUrl(new File(PROJECT_FILE_PATH), EDITOR_SERVER_URL, response);
 			 
 		 } catch (HttpHostConnectException e)  {
 		 
@@ -191,25 +192,23 @@ public class XtextTool  {
 	}
 	
 	
-	private String postProjectToUrl(File project, String url) throws IOException {
+	private void postProjectToUrl(File project, String url, JsonObject response) throws IOException {
 		
-		 HttpEntity entity = MultipartEntityBuilder.create()
+		HttpEntity entity = MultipartEntityBuilder.create()
 				 .setMode(HttpMultipartMode.LEGACY)
 				 .setCharset(Charset.forName("UTF8"))
 				 .addBinaryBody("xtextProject", project, ContentType.MULTIPART_FORM_DATA, PROJECT_FILENAME)
 				 .build();
 		 
-		 String uploadResponse = Request.post(url)
+		String uploadResponse = Request.post(url)
 				 .body(entity)
 				 .execute().returnContent().asString();
 
-		
-		 System.out.print(uploadResponse);
-		String editorUrl = "TODO"; //TODO parse response to get editor url
-		
+				
 		JsonObject jsonObject = JsonParser.parseString(uploadResponse).getAsJsonObject();
-		
-		return jsonObject.get(ES_JSON_RESPONSE_FIELD).getAsString();
+				
+		response.addProperty(ES_JSON_RESPONSE_FIELD, jsonObject.get(ES_JSON_RESPONSE_FIELD).getAsString());
+		response.addProperty(ES_JSON_RESPONSE_FIELD_STATUS, jsonObject.get(ES_JSON_RESPONSE_FIELD_STATUS).getAsString());
 	}
 	
 	private void deleteDir(File dir){
