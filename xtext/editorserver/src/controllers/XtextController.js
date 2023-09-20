@@ -55,7 +55,6 @@ class XtextController {
     editorStatus = async (req, res, next) => {
         try {
             const editorId = req.params.editorId;
-            console.log(editorId);
             const filePath = config.deployFileLocation + "/" + editorId;
             const editorDeployed = fs.existsSync(filePath);
             res.status(200).json({editorReady: editorDeployed});
