@@ -1,6 +1,29 @@
 # syntax=docker/dockerfile:1
 
 
+FROM node:19-bullseye AS toolstaticbuild
+
+RUN apt-get update && apt-get install -y --no-install-recommends zip
+
+WORKDIR /usr/src/mdenet-tool
+
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY xtext/static.xtext/package*.json ./
+
+COPY xtext/static.xtext .
+
+RUN npm install; npm run build; chmod -R 755 dist/
+
+# CORS configuration for webapp
+COPY xtext/acemodebundler/web.xml /usr/src/mdenet-tool/dist/WEB-INF/web.xml
+
+RUN cd dist && zip -r ROOT.war .
+
+
+
+
 FROM maven:3.6.3-openjdk-17 AS toolfunctions
 
 #Copy ocl toolfunction source and its dependencies
@@ -56,5 +79,8 @@ COPY xtext/start.sh /editorserver/start.sh
 
 
 RUN chmod +x /editorserver/start.sh
+
+# deploy tool static files
+COPY --from=toolstaticbuild /usr/src/mdenet-tool/dist/ROOT.war /usr/local/tomcat/webapps/ROOT.war
 
 ENTRYPOINT [ "/bin/bash", "start.sh" ]
