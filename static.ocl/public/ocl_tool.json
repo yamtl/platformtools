@@ -3,7 +3,13 @@
     {
         "id": "ocl",
 
-        "name": "OCL",
+        "name": "Eclipse OCL",
+
+        "version": "0.0.1",
+        
+        "author": "MDENet",
+        
+        "homepage": "https://github.com/mdenet/platformtools",
 
         "functions": [
 
