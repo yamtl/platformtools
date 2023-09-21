@@ -18,7 +18,6 @@ import java.io.IOException;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
@@ -112,27 +111,6 @@ public class XtextTool  {
 
 	}
 
-	
-	public void convertXToY(String X,  OutputStream outputStream, JsonObject response) throws Exception {
-		
-		final String emfaticFilename = "emfatic.emfatic";
-
-		String generatedY = "";
-		
-		/*-------------------------------------
-		 *  Load X 
-		 *-------------------------------------*/	
-		
-	
-
-		/*-------------------------------------
-		 *  Generate Y
-		 *-------------------------------------*/		
-
-		
-		 response.addProperty("output",  generatedY );
-	}
-	
 	
 	private void recreateGrammarFile (String path, String contents) {
 		

@@ -1,18 +1,9 @@
 package com.mdenetnetwork.ep.toolfunctions.xtext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.io.ByteArrayOutputStream;
-import java.util.List;
-
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-import com.mdenetnetwork.ep.toolfunctions.xtext.XtextTool;
-
 
 
 public class XtextToolTests {
@@ -54,29 +45,4 @@ public class XtextToolTests {
 		assertEquals(contentsValueB, parsedPfiles[1].getContents());
 	}
 	
-	
-	@Test
-	@Disabled
-	void testOuputIsGreetingWithInputParameterAppended() throws Exception{
-		
-		//Prepare inputs
-		final String languageName = "base.Language"; // last part must be capitalised
-		final String baseName = "base";
-		final String extension = "ext";
-		final String grammar= "grammar";
-		final List<ProjectFile>  projectFiles = null;
-		
-		final String expectedOutput="TODO";
-		
-		JsonObject response = new JsonObject();
-		ByteArrayOutputStream outstream = new ByteArrayOutputStream();
-
-		XtextTool tool = new XtextTool(); 
-		
-		// Run the tool function
-		tool.run(languageName, baseName, extension, grammar, projectFiles, outstream, response);
-		
-		// Check the result
-		assertEquals( expectedOutput, outstream.toString() );
-	}	
 }
