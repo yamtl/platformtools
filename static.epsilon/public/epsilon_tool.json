@@ -295,31 +295,7 @@
                 ]
 
             },
-
-            {
-
-                "id": "console",
-
-                "name": "console",
-
-                "panelclass": "ConsolePanel",
-
-                "icon": "images/console.gif"
-
-            },
-
-            {
-
-                "id": "problem",
-
-                "name": "problem",
-                
-                "panelclass": "OutputPanel",
-
-                "icon": "problems"
-
-            },
-
+            
             {
 
                 "id": "emfgraph",
