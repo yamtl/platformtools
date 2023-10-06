@@ -32,6 +32,12 @@
 
    <profiles>    
     <profile>
+      <id>core</id>
+      <modules>
+        <module>com.mde-network.ep.toolfunctions.core</module>
+      </modules>
+    </profile>
+    <profile>
       <id>all</id>
       <modules>
             <module>com.mde-network.ep.toolfunctions.archetypes.tool</module>   
